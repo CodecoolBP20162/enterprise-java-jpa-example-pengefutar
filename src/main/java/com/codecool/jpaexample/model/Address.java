@@ -9,9 +9,13 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String country;
+    @Column(name= "Zip", length = 4)
     private String zipcode;
     private String city;
     private String addr;
+
+    @OneToOne(mappedBy = "address")
+    private Student student;
 
     public Address() {
     }
@@ -55,6 +59,8 @@ public class Address {
         this.city = city;
     }
 
+    public void  setStudent(Student student) {this.student = student;}
+
     public String getAddr() {
         return addr;
     }
@@ -71,6 +77,7 @@ public class Address {
                 ", zipcode='" + zipcode + '\'' +
                 ", city='" + city + '\'' +
                 ", addr='" + addr + '\'' +
+                ", student='" + student.toString() + '\'' +
                 '}';
     }
 

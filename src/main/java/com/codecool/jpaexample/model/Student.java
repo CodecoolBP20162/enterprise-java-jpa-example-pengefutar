@@ -1,9 +1,11 @@
 package com.codecool.jpaexample.model;
 
+
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import java.util.*;
 import java.util.List;
 
 @Entity
@@ -15,29 +17,44 @@ public class Student {
 
     private String name;
 
+
+    @ManyToOne
+    @JoinColumn(name = "Class")
+    private Klass klass;
+
+    @Column(nullable = false,unique = true)
     private String email;
 
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
+    @Transient
     private long age;
+
 
     @OneToOne
     private Address address;
 
+    @ElementCollection
+    @CollectionTable(name="Phone")
+    private List<String> phoneNumber;
+
+
     public Student() {
     }
 
-    public Student(String name, String email, Date dateOfBirth) {
+    public Student(String name, String email, Date dateOfBirth, List<String> phoneNumber) {
         this.name = name;
         this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.age = (Calendar.getInstance().getTimeInMillis() - dateOfBirth.getTime())
                 / (60L * 60L * 1000L * 24L * 365L);
+        this.phoneNumber = phoneNumber;
     }
 
-    public Student(String name, String email, Date dateOfBirth, Address address) {
-        this(name, email, dateOfBirth);
+    public Student(String name, String email, Date dateOfBirth,
+                   List<String> phoneNumber, Address address) {
+        this(name, email, dateOfBirth, phoneNumber);
         this.address = address;
     }
 
@@ -52,6 +69,8 @@ public class Student {
     public String getName() {
         return name;
     }
+
+    public void setKlass(Klass klass) {this.klass=klass;}
 
     public void setName(String name) {
         this.name = name;
@@ -92,6 +111,7 @@ public class Student {
                 ", name='" + name + '\'' +
                 ", age=" + age +
                 ", address id=" + address.getId() +
+                ", phone=" +phoneNumber.toString() +
                 '}';
     }
 
